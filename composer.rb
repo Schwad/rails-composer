@@ -168,6 +168,19 @@ def copy_from(source, destination)
   end
 end
 
+def copy_all_from_core_repo
+  say_wizard "*" * 1000
+  say_wizard "\n\n\n\n\n"
+  say_wizard "TEST MODE ONLY - COPYING ALL FROM CORE REPO"
+  say_wizard "\n\n\n\n\n"
+  say_wizard "*" * 1000
+  sleep 3
+  Dir.glob("files/**/*.erb").each do |core_file|
+    say_wizard "Now copying over #{core_file}"
+    copy_from_repo(core_file.match(/files\/(.*)/).first)
+  end
+end
+
 def copy_from_repo(filename, opts = {})
   repo = 'https://raw.github.com/RailsApps/rails-composer/master/files/'
   repo = opts[:repo] unless opts[:repo].nil?
@@ -327,6 +340,7 @@ if prefer :git, true
 else
   stage_three do
     say_wizard "recipe stage three"
+    copy_all_from_core_repo
     say_wizard "removing .gitignore and .gitkeep files"
     git_files = Dir[File.join('**','.gitkeep')] + Dir[File.join('**','.gitignore')]
     File.unlink git_files
@@ -496,6 +510,7 @@ if prefer :apps4, 'learn-rails'
 
   stage_three do
     say_wizard "recipe stage three"
+    copy_all_from_core_repo
     repo = 'https://raw.github.com/RailsApps/learn-rails/master/'
 
     # >-------------------------------[ Models ]--------------------------------<
@@ -751,6 +766,7 @@ if prefer :apps4, 'rails-signup-download'
 
   stage_three do
     say_wizard "recipe stage three"
+    copy_all_from_core_repo
     repo = 'https://raw.github.com/RailsApps/rails-signup-download/master/'
 
     # >-------------------------------[ Config ]---------------------------------<
@@ -827,6 +843,7 @@ if prefer :apps4, 'rails-mailinglist-activejob'
 
   stage_three do
     say_wizard "recipe stage three"
+    copy_all_from_core_repo
     repo = 'https://raw.github.com/RailsApps/rails-mailinglist-activejob/master/'
 
     # >-------------------------------[ Config ]---------------------------------<
@@ -905,6 +922,7 @@ if prefer :apps4, 'rails-stripe-checkout'
 
   stage_three do
     say_wizard "recipe stage three"
+    copy_all_from_core_repo
     repo = 'https://raw.github.com/RailsApps/rails-stripe-checkout/master/'
 
     # >-------------------------------[ Config ]---------------------------------<
@@ -990,6 +1008,7 @@ if prefer :apps4, 'rails-stripe-coupons'
 
   stage_three do
     say_wizard "recipe stage three"
+    copy_all_from_core_repo
     repo = 'https://raw.github.com/RailsApps/rails-stripe-coupons/master/'
 
     # >-------------------------------[ Migrations ]---------------------------------<
@@ -1114,6 +1133,7 @@ if prefer :apps4, 'rails-stripe-membership-saas'
 
   stage_three do
     say_wizard "recipe stage three"
+    copy_all_from_core_repo
     repo = 'https://raw.github.com/RailsApps/rails-stripe-membership-saas/master/'
 
     # >-------------------------------[ Migrations ]---------------------------------<
@@ -1417,6 +1437,7 @@ say_recipe 'readme'
 
 stage_three do
   say_wizard "recipe stage three"
+  copy_all_from_core_repo
 
   # remove default READMEs
   %w{
@@ -1892,6 +1913,7 @@ end
 
 stage_three do
   say_wizard "recipe stage three"
+  copy_all_from_core_repo
   if prefer :tests, 'rspec'
     if prefer :authentication, 'devise'
       generate 'testing:configure devise -f'
@@ -2252,6 +2274,7 @@ say_recipe 'init'
 
 stage_three do
   say_wizard "recipe stage three"
+  copy_all_from_core_repo
   if (!prefs[:secrets].nil?)
     prefs[:secrets].each do |secret|
       env_var = "  #{secret}: <%= ENV[\"#{secret.upcase}\"] %>"
@@ -2660,6 +2683,7 @@ if prefs[:github]
   add_gem 'hub', :require => nil, :group => [:development]
   stage_three do
     say_wizard "recipe stage three"
+    copy_all_from_core_repo
     say_wizard "recipe creating GitHub repository"
     git_uri = `git config remote.origin.url`.strip
     unless git_uri.size == 0
